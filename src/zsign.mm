@@ -182,7 +182,13 @@ int zsign(
 	bool bForce = true;
 	bool bWeakInject = false;
 	bool bAdhoc = adhoc;
-	bool bSHA256Only = false;
+	// Match the CLI (zsign.cpp), which defaulted to SHA256-only in fe1750d.
+	// Emitting the legacy SHA-1 CodeDirectory alongside the SHA-256 one makes
+	// modern macOS reject the signature outright (errSecCSSignatureFailed),
+	// and once Security refuses the signature it stops reporting entitlements
+	// at all -- which is what surfaces as "binary contains an invalid
+	// entitlements blob. The OS will ignore these entitlements."
+	bool bSHA256Only = true;
 	
 	string strCertFile;
 	string strPKeyFile;
