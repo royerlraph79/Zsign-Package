@@ -830,7 +830,13 @@ bool ZBundle::SignFolder(ZSignAsset* pSignAsset,
 
 	ZFile::RemoveFileV("%s/embedded.mobileprovision", m_strAppFolder.c_str());
 	if (!pSignAsset->m_strProvData.empty()) {
-		if (bRemoveProvision) {
+		// bRemoveProvision means "remove the profile", per --rm_provision and the
+		// matching check in GetChangedFiles(). Embed it when the caller did NOT
+		// ask for removal. This was inverted: with the flag set the profile was
+		// written here and then deleted again during sealing, and with it clear
+		// it was never written at all -- so no configuration ever shipped an
+		// embedded.mobileprovision.
+		if (!bRemoveProvision) {
 			if (!ZFile::WriteFileV(pSignAsset->m_strProvData, "%s/embedded.mobileprovision", m_strAppFolder.c_str())) { // embedded.mobileprovision
 				ZLog::ErrorV(">>> Can't write embedded.mobileprovision!\n");
 				return false;
