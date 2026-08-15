@@ -224,7 +224,9 @@ int zsign(
 	ZLog::PrintV(">>> Signing:\t%s %s\n", strPath.c_str(), (bAdhoc ? " (Ad-hoc)" : ""));
 	atimer.PrintResult(bRet, ">>> Signed %s!", bRet ? "OK" : "Failed");
 	
-	completionHandler(bRet);
+	if (completionHandler) {
+		completionHandler(bRet);
+	}
 	
 	gtimer.Print(">>> Done.");
 	return bRet ? 0 : -1;
