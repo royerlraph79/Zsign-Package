@@ -526,7 +526,14 @@ enum eReqMatchOp
 	kReqMatchEqual = 1,			/* exact string match */
 };
 
-/* SecRequirementType (from CSCommon.h) */
+/* SecRequirementType (from CSCommon.h)
+ *
+ * On macOS and Mac Catalyst, Foundation reaches Security/CSCommon.h, which
+ * already defines these enumerators, so declaring them again is an error in
+ * any Objective-C++ translation unit. iOS does not expose SecStaticCode.h,
+ * so the copy below is still needed there. The values are fixed by the code
+ * signing format, so the two definitions agree either way. */
+#ifndef _H_CSCOMMON
 enum eSecRequirementType
 {
 	kSecHostRequirementType = 1,
@@ -534,6 +541,7 @@ enum eSecRequirementType
 	kSecDesignatedRequirementType = 3,
 	kSecLibraryRequirementType = 4,
 };
+#endif
 
 #pragma pack(push, 1)
 
